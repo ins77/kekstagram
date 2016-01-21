@@ -18,13 +18,7 @@ function getMessage(a, b) {
   } else if (a instanceof Array && b instanceof Array) {
 
     var square = 0;
-    var arrayLength;
-
-    if (a.length >= b.length) {
-      arrayLength = b.length;
-    } else {
-      arrayLength = a.length;
-    }
+    var arrayLength = Math.min(a.length, b.length);
 
     for (var i = 0; i < arrayLength; i++) {
       square += a[i] * b[i];
