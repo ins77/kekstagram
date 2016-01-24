@@ -111,6 +111,47 @@
       // Координаты задаются от центра холста.
       this._ctx.drawImage(this._image, displX, displY);
 
+      var containerX = -this._container.width / 2;
+      var containerY = -this._container.height / 2;
+      var cropRectStart = this._resizeConstraint.side / 2;
+
+      this._ctx.beginPath();
+      this._ctx.moveTo(containerX, containerY);
+      this._ctx.lineTo(containerX + this._container.width, containerY);
+      this._ctx.lineTo(containerX + this._container.width, containerY + this._container.height);
+      this._ctx.lineTo(containerX, containerY + this._container.height);
+      this._ctx.lineTo(containerX, containerY);
+      this._ctx.closePath();
+      this._ctx.moveTo(-cropRectStart - this._ctx.lineWidth, -cropRectStart - this._ctx.lineWidth);
+      this._ctx.lineTo(-cropRectStart - this._ctx.lineWidth, cropRectStart - this._ctx.lineWidth / 2);
+      this._ctx.lineTo(cropRectStart - this._ctx.lineWidth / 2, cropRectStart - this._ctx.lineWidth / 2);
+      this._ctx.lineTo(cropRectStart - this._ctx.lineWidth / 2, -cropRectStart - this._ctx.lineWidth);
+      this._ctx.lineTo(-cropRectStart - this._ctx.lineWidth, -cropRectStart - this._ctx.lineWidth);
+      this._ctx.closePath();
+      this._ctx.fillStyle = 'rgba(0, 0, 0, .8)';
+      this._ctx.fill();
+
+      // // Второе решение. Проблема - если картинки под прямоугольником с рамкой нет, то фон под этим прямоугольником затемнен.
+      // this._ctx.beginPath();
+      // this._ctx.rect(displX, displY, this._container.width, this._container.height);
+      // this._ctx.closePath();
+      // this._ctx.rect(
+      //     (-this._resizeConstraint.side / 2) - this._ctx.lineWidth,
+      //     (-this._resizeConstraint.side / 2) - this._ctx.lineWidth,
+      //     this._resizeConstraint.side + this._ctx.lineWidth / 2,
+      //     this._resizeConstraint.side + this._ctx.lineWidth / 2);
+      // this._ctx.closePath();
+      // this._ctx.fillStyle = 'rgba(0, 0, 0, .8)';
+      // this._ctx.fill('evenodd');
+
+      var textResolution = this._image.naturalWidth + ' x ' + this._image.naturalHeight;
+
+      this._ctx.fillStyle = '#fff';
+      this._ctx.font = '14px Arial';
+      this._ctx.textAlign = 'center';
+      // не понимаю, почему текст не центрируется точно, пришлось поставить по оси X значение -8, не из-за желтого ли бордера?
+      this._ctx.fillText(textResolution, -8, -cropRectStart - this._ctx.lineWidth * 2);
+
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
       this._ctx.strokeRect(
