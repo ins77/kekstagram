@@ -75,10 +75,10 @@
     if ((resizeX.value < 0) || (resizeY.value < 0)) {
       errorMessage = 'Проверьте правильность значений, введенных в поля для ввода';
       return false;
-    } else if ((resizeX.value + resizeSize.value < currentResizer._image.naturalWidth)) {
+    } else if ((resizeX.value + resizeSize.value > currentResizer._image.naturalWidth)) {
       errorMessage = 'Сумма значений полей «слева» и «сторона» не должна быть больше ширины исходного изображения';
       return false;
-    } else if ((resizeY.value + resizeSize.value < currentResizer._image.naturalHeight)) {
+    } else if ((resizeY.value + resizeSize.value > currentResizer._image.naturalHeight)) {
       errorMessage = 'Сумма значений полей «сверху» и «сторона» не должна быть больше высоты исходного изображения';
       return false;
     }
