@@ -72,6 +72,17 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
+    if ((resizeX.value < 0) || (resizeY.value < 0)) {
+      errorMessage = 'Проверьте правильность значений, введенных в поля для ввода';
+      return false;
+    } else if ((resizeX.value + resizeSize.value < currentResizer._image.naturalWidth)) {
+      errorMessage = 'Сумма значений полей «слева» и «сторона» не должна быть больше ширины исходного изображения';
+      return false;
+    } else if ((resizeY.value + resizeSize.value < currentResizer._image.naturalHeight)) {
+      errorMessage = 'Сумма значений полей «сверху» и «сторона» не должна быть больше высоты исходного изображения';
+      return false;
+    }
+
     return true;
   }
 
@@ -86,6 +97,12 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+
+  var resizeX = resizeForm['resize-x'];
+  var resizeY = resizeForm['resize-y'];
+  var resizeSize = resizeForm['resize-size'];
+  var resizeBtnSubmit = resizeForm['resize-fwd'];
+  var errorMessage;
 
   /**
    * Форма добавления фильтра.
@@ -199,6 +216,9 @@
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
+    } else {
+      resizeBtnSubmit.setAttribute('disabled', 'disabled');
+      showMessage(Action.ERROR, errorMessage);
     }
   };
 
@@ -252,6 +272,7 @@
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
+
   };
 
   cleanupResizer();
