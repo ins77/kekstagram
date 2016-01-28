@@ -106,6 +106,8 @@
   var errorMessage;
   var errorText = document.createElement('div');
 
+  errorText.style.position = 'relative';
+  errorText.style.zIndex = '10';
   resizeForm.appendChild(errorText);
 
   /**
