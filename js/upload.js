@@ -72,17 +72,18 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
-    if ((resizeX.value < 0) || (resizeY.value < 0)) {
+    if ((parseInt(resizeX.value, 10) < 0) || (parseInt(resizeY.value, 10) < 0)) {
       errorMessage = 'Проверьте правильность значений, введенных в поля для ввода';
       return false;
-    } else if ((resizeX.value + resizeSize.value > currentResizer._image.naturalWidth)) {
+    } else if ((parseInt(resizeX.value, 10) + parseInt(resizeSize.value, 10)) > currentResizer._image.naturalWidth) {
       errorMessage = 'Сумма значений полей «слева» и «сторона» не должна быть больше ширины исходного изображения';
       return false;
-    } else if ((resizeY.value + resizeSize.value > currentResizer._image.naturalHeight)) {
+    } else if ((parseInt(resizeY.value, 10) + parseInt(resizeSize.value, 10)) > currentResizer._image.naturalHeight) {
       errorMessage = 'Сумма значений полей «сверху» и «сторона» не должна быть больше высоты исходного изображения';
       return false;
     }
 
+    errorMessage = '';
     return true;
   }
 
@@ -103,6 +104,9 @@
   var resizeSize = resizeForm['resize-size'];
   var resizeBtnSubmit = resizeForm['resize-fwd'];
   var errorMessage;
+  var errorText = document.createElement('div');
+
+  resizeForm.appendChild(errorText);
 
   /**
    * Форма добавления фильтра.
@@ -216,10 +220,23 @@
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
-    } else {
-      resizeBtnSubmit.setAttribute('disabled', 'disabled');
-      showMessage(Action.ERROR, errorMessage);
     }
+  };
+
+  /**
+   * Обработка изменения формы кадрирования. Если форма валидна, удаляет
+   * аттрибут disabled у кнопки, иначе добавляет. Выводится сообщение об ошибке.
+   */
+  resizeForm.onchange = function() {
+
+    if (resizeFormIsValid()) {
+      resizeBtnSubmit.disabled = false;
+    } else {
+      resizeBtnSubmit.disabled = true;
+    }
+
+    errorText.innerHTML = errorMessage;
+
   };
 
   /**
@@ -272,7 +289,6 @@
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
-
   };
 
   cleanupResizer();
