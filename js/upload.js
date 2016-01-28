@@ -108,6 +108,8 @@
 
   errorText.style.position = 'relative';
   errorText.style.zIndex = '10';
+  errorText.style.textAlign = 'center';
+  errorText.style.left = '-6px';
   resizeForm.appendChild(errorText);
 
   /**
