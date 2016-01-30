@@ -221,13 +221,24 @@
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
+    var uploadFilter = filterForm['upload-filter'];
+    var lastBirthday = new Date(2015, 12, 31);
+    var dateToExpire = (Date.now() - lastBirthday) / 24 / 60 / 60 / 1000;
+    var formattedDateToExpire = new Date(dateToExpire).toUTCString();
+
     cleanupResizer();
     updateBackground();
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
 
-    document.cookie = 'cookieThatWillExpire=1; expires=Monday, 29 Feb 2016 23:59:59 GMT';
+    for (var i = 0; i < uploadFilter.length; i++) {
+      if (uploadFilter[i].checked) {
+        docCookies.setItem('filter', uploadFilter[i].value, formattedDateToExpire);
+      }
+    }
+
+    filterForm.submit();
   };
 
   /**
