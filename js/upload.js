@@ -72,7 +72,7 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
-    if ((parseInt(resizeX.value, 10) < 0) || (parseInt(resizeY.value, 10) < 0)) {
+    if ((parseInt(resizeX.value, 10) < 0) || (parseInt(resizeY.value, 10) || (parseInt(resizeSize.value, 10)) < 0)) {
       errorMessage = 'Проверьте правильность значений, введенных в поля для ввода';
       return false;
     } else if ((parseInt(resizeX.value, 10) + parseInt(resizeSize.value, 10)) > currentResizer._image.naturalWidth) {
@@ -85,6 +85,16 @@
 
     errorMessage = '';
     return true;
+  }
+
+  function checkInputs() {
+    if (resizeFormIsValid()) {
+      resizeBtnSubmit.disabled = false;
+    } else {
+      resizeBtnSubmit.disabled = true;
+    }
+
+    errorText.innerHTML = errorMessage;
   }
 
   /**
@@ -109,8 +119,10 @@
   errorText.style.position = 'relative';
   errorText.style.zIndex = '10';
   errorText.style.textAlign = 'center';
+  errorText.style.color = 'red';
   errorText.style.left = '-6px';
-  resizeForm.appendChild(errorText);
+  errorText.style.top = '-40px';
+  document.body.appendChild(errorText);
 
   /**
    * Форма добавления фильтра.
@@ -227,20 +239,17 @@
     }
   };
 
-  /**
-   * Обработка изменения формы кадрирования. Если форма валидна, удаляет
-   * аттрибут disabled у кнопки, иначе добавляет. Выводится сообщение об ошибке.
-   */
   resizeForm.onchange = function() {
-
-    if (resizeFormIsValid()) {
-      resizeBtnSubmit.disabled = false;
-    } else {
-      resizeBtnSubmit.disabled = true;
-    }
-
-    errorText.innerHTML = errorMessage;
-
+    checkInputs();
+  };
+  resizeX.onkeydown = function() {
+    checkInputs();
+  };
+  resizeY.onkeydown = function() {
+    checkInputs();
+  };
+  resizeSize.onkeydown = function() {
+    checkInputs();
   };
 
   /**
