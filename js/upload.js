@@ -226,6 +226,8 @@
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
+
+    document.cookie = 'cookieThatWillExpire=1; expires=Monday, 29 Feb 2016 23:59:59 GMT';
   };
 
   /**
