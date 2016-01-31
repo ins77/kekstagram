@@ -239,7 +239,10 @@
     var selectedFilterValue = filterForm.querySelectorAll('[name="upload-filter"]:checked')[0].value;
     var today = new Date();
     var lastBirthday = new Date(today.getFullYear(), 11, 31);
-    var daysToExpire = +today + Math.abs(today - lastBirthday);
+    if ((lastBirthday.getMonth() >= today.getMonth()) && (lastBirthday.getDay() > today.getDay())) {
+      lastBirthday = new Date(today.getFullYear() - 1, 11, 31);
+    }
+    var daysToExpire = +today + (today - lastBirthday);
 
     cleanupResizer();
     updateBackground();
