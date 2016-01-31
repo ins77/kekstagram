@@ -238,8 +238,8 @@
 
     var selectedFilterValue = filterForm.querySelectorAll('[name="upload-filter"]:checked')[0].value;
     var today = new Date();
-    var lastBirthday = new Date(2015, 12, 31);
-    var daysToExpire = parseInt(today, 10) + parseInt(today, 10) - parseInt(lastBirthday, 10);
+    var lastBirthday = new Date(today.getFullYear(), 11, 31);
+    var daysToExpire = +today + Math.abs(today - lastBirthday);
 
     cleanupResizer();
     updateBackground();
