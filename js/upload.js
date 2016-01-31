@@ -130,6 +130,8 @@
    */
   var filterForm = document.forms['upload-filter'];
 
+  var uploadFilter = filterForm.querySelectorAll('[name="upload-filter"]');
+
   /**
    * @type {HTMLImageElement}
    */
@@ -263,6 +265,19 @@
     resizeForm.classList.remove('invisible');
   };
 
+  if (docCookies.getItem('filter')) {
+    var filterDefault = docCookies.getItem('filter');
+
+    for (var i = 0; i < uploadFilter.length; i++) {
+      if (uploadFilter[i].value === filterDefault) {
+        uploadFilter[i].setAttribute('checked', '');
+        filterImage.className = 'filter-image-preview filter-' + filterDefault;
+      } else {
+        uploadFilter[i].removeAttribute('checked');
+      }
+    }
+  }
+
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
    * записав сохраненный фильтр в cookie.
@@ -271,11 +286,21 @@
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
+    var selectedFilterValue = filterForm.querySelectorAll('[name="upload-filter"]:checked')[0].value;
+    var today = new Date();
+    var lastBirthday = new Date(today.getFullYear(), 11, 31);
+    if ((lastBirthday.getMonth() >= today.getMonth()) && (lastBirthday.getDay() > today.getDay())) {
+      lastBirthday = new Date(today.getFullYear() - 1, 11, 31);
+    }
+    var daysToExpire = +today + (today - lastBirthday);
+
     cleanupResizer();
     updateBackground();
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
+
+    docCookies.setItem('filter', selectedFilterValue, new Date(daysToExpire));
   };
 
   /**
