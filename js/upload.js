@@ -113,15 +113,17 @@
   var resizeY = resizeForm['resize-y'];
   var resizeSize = resizeForm['resize-size'];
   var resizeBtnSubmit = resizeForm['resize-fwd'];
+  var resizeBtnClear = resizeForm['resize-prev'];
   var errorMessage;
   var errorText = document.createElement('div');
 
-  errorText.style.position = 'relative';
+  errorText.style.position = 'absolute';
   errorText.style.zIndex = '10';
   errorText.style.textAlign = 'center';
   errorText.style.color = 'red';
-  errorText.style.left = '-6px';
-  errorText.style.top = '-40px';
+  errorText.style.left = '0';
+  errorText.style.right = '0';
+  errorText.style.top = '0';
   document.body.appendChild(errorText);
 
   /**
@@ -254,6 +256,10 @@
     checkInputs();
   };
 
+  resizeBtnClear.onclick = function() {
+    errorText.innerHTML = '';
+  };
+
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
    * @param {Event} evt
@@ -265,6 +271,7 @@
     resizeForm.classList.remove('invisible');
   };
 
+  /* global docCookies */
   if (docCookies.getItem('filter')) {
     var filterDefault = docCookies.getItem('filter');
 
