@@ -201,6 +201,7 @@
           resizeForm.classList.remove('invisible');
 
           hideMessage();
+          checkInputs();
         };
 
         fileReader.readAsDataURL(element.files[0]);
