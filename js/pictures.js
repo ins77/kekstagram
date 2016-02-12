@@ -62,9 +62,9 @@
     var filteredPictures = loadedPictures.slice(0);
 
     switch (id) {
-      case 'filter-popular':
+      case 'popular':
         break;
-      case 'filter-new':
+      case 'new':
         var twoWeeksAgo = new Date() - 21 * 24 * 60 * 60 * 1000;
         filteredPictures = filteredPictures.filter(
           function(element) {
@@ -74,7 +74,7 @@
           return Date.parse(b.date) - Date.parse(a.date);
         });
         break;
-      case 'filter-discussed':
+      case 'discussed':
         filteredPictures = filteredPictures.sort(function(a, b) {
           return b.comments - a.comments;
         });
@@ -87,11 +87,11 @@
   }
 
   var filter = filters.filter;
-  var activeFilter = 'filter-popular';
+  var activeFilter = document.querySelector('.filters [name="filter"]:checked').value;
 
   for (var i = 0; i < filter.length; i++) {
     filter[i].onclick = function(evt) {
-      var clickedElementID = evt.target.id;
+      var clickedElementID = evt.target.value;
       setActiveFilter(clickedElementID);
     };
   }
