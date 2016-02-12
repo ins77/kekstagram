@@ -62,8 +62,6 @@
     var filteredPictures = loadedPictures.slice(0);
 
     switch (id) {
-      case 'popular':
-        break;
       case 'new':
         var twoWeeksAgo = new Date() - 21 * 24 * 60 * 60 * 1000;
         filteredPictures = filteredPictures.filter(
