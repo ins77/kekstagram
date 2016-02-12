@@ -2,8 +2,10 @@
 
 (function() {
 
+  var IMAGE_TIMEOUT = 10000;
   var container = document.querySelector('.pictures');
   var filters = document.querySelector('.filters');
+  var template = document.querySelector('#picture-template');
   var loadedPictures = [];
 
   filters.classList.add('hidden');
@@ -54,14 +56,14 @@
 
   filters.classList.remove('hidden');
 
-  function setActiveFilter(id) {
-    if (activeFilter === id) {
+  function setActiveFilter(value) {
+    if (activeFilter === value) {
       return;
     }
 
     var filteredPictures = loadedPictures.slice(0);
 
-    switch (id) {
+    switch (value) {
       case 'new':
         var twoWeeksAgo = new Date() - 21 * 24 * 60 * 60 * 1000;
         filteredPictures = filteredPictures.filter(
@@ -81,7 +83,7 @@
 
     renderPictures(filteredPictures);
 
-    activeFilter = id;
+    activeFilter = value;
   }
 
   var filter = filters.filter;
@@ -89,13 +91,12 @@
 
   for (var i = 0; i < filter.length; i++) {
     filter[i].onclick = function(evt) {
-      var clickedElementID = evt.target.value;
-      setActiveFilter(clickedElementID);
+      var clickedElementValue = evt.target.value;
+      setActiveFilter(clickedElementValue);
     };
   }
 
   function getPicturesFromTemplate(data) {
-    var template = document.querySelector('#picture-template');
     var templateContent = 'content' in template ? template.content : template;
     var pictureElement = templateContent.querySelector('.picture').cloneNode(true);
 
@@ -105,7 +106,6 @@
     var image = new Image('182', '182');
     var replaceImg = pictureElement.querySelector('img');
     var imageLoadTimeout;
-    var IMAGE_TIMEOUT = 10000;
 
     image.onload = function() {
       clearTimeout(imageLoadTimeout);
