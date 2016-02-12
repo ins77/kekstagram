@@ -87,7 +87,7 @@
   }
 
   var filter = filters.filter;
-  var activeFilter = document.querySelector('.filters [name="filter"]:checked').value;
+  var activeFilter = filter.value;
 
   for (var i = 0; i < filter.length; i++) {
     filter[i].onclick = function(evt) {
