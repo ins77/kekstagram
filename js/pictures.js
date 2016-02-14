@@ -12,11 +12,18 @@
   var filteredPictures = [];
   var currentPage = 0;
   var PAGE_SIZE = 12;
-  var picturesCoordinates = container.getBoundingClientRect();
   var viewportSize = window.innerHeight;
+  var picturesCoordinates;
   var scrollTimeout;
 
   filters.classList.add('hidden');
+
+  window.addEventListener('resize', function() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function() {
+      viewportSize = window.innerHeight;
+    }, 100);
+  });
 
   getPictures();
 
@@ -36,6 +43,9 @@
     });
 
     container.appendChild(fragment);
+
+    picturesCoordinates = container.getBoundingClientRect();
+    console.log(picturesCoordinates);
   }
 
   function getPictures() {
@@ -64,9 +74,10 @@
 
       renderPictures(loadedPictures, 0);
 
-      if (picturesCoordinates.bottom <= viewportSize) {
-        renderPictures(loadedPictures, ++currentPage);
-      }
+      // if (picturesCoordinates.bottom <= viewportSize) {
+      //   renderPictures(loadedPictures, ++currentPage);
+      // }
+      addPictures(loadedPictures);
     };
 
     xhr.send();
@@ -101,11 +112,23 @@
 
     renderPictures(filteredPictures, 0, true);
 
-    if (picturesCoordinates.bottom <= viewportSize) {
-      renderPictures(filteredPictures, ++currentPage);
-    }
+    // if (picturesCoordinates.bottom <= viewportSize) {
+    //   renderPictures(filteredPictures, ++currentPage);
+    // }
+
+    addPictures(filteredPictures);
 
     activeFilter = value;
+  }
+
+  function addPictures(pictures) {
+    // if ((window.scrollTop + window.height) >= (picturesCoordinates.height + picturesCoordinates.top)) {
+    if (picturesCoordinates.bottom <= viewportSize) {
+      if (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)) {
+        renderPictures(pictures, ++currentPage);
+        console.log(viewportSize);
+      }
+    }
   }
 
   for (var i = 0; i < filter.length; i++) {
