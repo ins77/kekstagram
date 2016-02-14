@@ -4,6 +4,7 @@
 
   var IMAGE_TIMEOUT = 10000;
   var container = document.querySelector('.pictures');
+  var containerTop = container.offsetTop;
   var filters = document.querySelector('.filters');
   var template = document.querySelector('#picture-template');
   var filter = filters.filter;
@@ -19,10 +20,8 @@
   filters.classList.add('hidden');
 
   window.addEventListener('resize', function() {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(function() {
-      viewportSize = window.innerHeight;
-    }, 100);
+    viewportSize = window.innerHeight;
+    addPictures();
   });
 
   getPictures();
@@ -45,7 +44,10 @@
     container.appendChild(fragment);
 
     picturesCoordinates = container.getBoundingClientRect();
-    console.log(picturesCoordinates);
+
+    if (picturesToRender.length > to) {
+      addPictures();
+    }
   }
 
   function getPictures() {
@@ -72,12 +74,9 @@
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
 
-      renderPictures(loadedPictures, 0);
+      filteredPictures = loadedPictures.slice(0);
 
-      // if (picturesCoordinates.bottom <= viewportSize) {
-      //   renderPictures(loadedPictures, ++currentPage);
-      // }
-      addPictures(loadedPictures);
+      renderPictures(loadedPictures, 0);
     };
 
     xhr.send();
@@ -112,40 +111,28 @@
 
     renderPictures(filteredPictures, 0, true);
 
-    // if (picturesCoordinates.bottom <= viewportSize) {
-    //   renderPictures(filteredPictures, ++currentPage);
-    // }
-
-    addPictures(filteredPictures);
-
     activeFilter = value;
   }
 
-  function addPictures(pictures) {
-    // if ((window.scrollTop + window.height) >= (picturesCoordinates.height + picturesCoordinates.top)) {
-    if (picturesCoordinates.bottom <= viewportSize) {
+  function addPictures() {
+    if ((window.scrollY + viewportSize) >= (picturesCoordinates.height + containerTop)) {
       if (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)) {
-        renderPictures(pictures, ++currentPage);
-        console.log(viewportSize);
+        renderPictures(filteredPictures, ++currentPage);
       }
     }
   }
 
-  for (var i = 0; i < filter.length; i++) {
-    filter[i].onclick = function(evt) {
-      var clickedElementValue = evt.target.value;
-      setActiveFilter(clickedElementValue);
-    };
-  }
+  filters.addEventListener('click', function(evt) {
+    var clickedElement = evt.target;
+    if (clickedElement.classList.contains('filters-radio')) {
+      setActiveFilter(clickedElement.value);
+    }
+  });
 
   window.addEventListener('scroll', function() {
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(function() {
-      if (picturesCoordinates.bottom <= viewportSize) {
-        if (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)) {
-          renderPictures(filteredPictures, ++currentPage);
-        }
-      }
+      addPictures();
     }, 100);
   });
 
